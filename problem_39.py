@@ -26,11 +26,7 @@ def problem_39(target=1000):
                     answers[d] = [(a, b, c)]
         except:
             pass
-    lengths = []
-    for x in answers.keys():
-        if len(answers[x]) > lengths[0]:
-            lengths = [len(answers[x]), sum([answers[x][0]])]
-    print(lengths)
+    print(answers)
     return answers
 
 a = problem_39()
