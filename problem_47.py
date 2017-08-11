@@ -46,6 +46,8 @@ def problem_47():
                     if x-3 in last_results:
                         print(x-3)
                         break
+            if len(last_results) > 6:
+                last_results = last_results[1:]
                     
 import cProfile
 cProfile.run("problem_47()")
