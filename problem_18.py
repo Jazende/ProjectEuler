@@ -1,44 +1,17 @@
 def problem_18():
-    lines=[[75],
-           [95,64],
-           [17,47,82],
-           [18,35,87,10],
-           [20, 4,82,47,65],
-           [19, 1,23,75, 3,34],
-           [88, 2,77,73, 7,63,67],
-           [99,65, 4,28, 6,16,70,92],
-           [41,41,26,56,83,40,80,70,33],
-           [41,48,72,33,47,32,37,16,94,29],
-           [53,71,44,65,25,43,91,52,97,51,14],
-           [70,11,33,28,77,73,17,78,39,68,17,57],
-           [91,71,52,38,17,14,91,43,58,50,27,29,48],
-           [63,66, 4,68,89,53,67,30,73,16,69,87,40,31],
-           [ 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23]]
+    import re
+    lines = []
+    with open('p067_triangle.txt', 'r') as f:
+        for line in f:
+            temp = re.findall("\d{1,2}", line)
+            lines.append([int(x) for x in temp])
 
-    def reduce(start):
-        row = start[0]
-        column = start[1]
-        line_1 = lines[row+1][column]+lines[row+2][column]
-        line_2 = lines[row+1][column]+lines[row+2][column+1]
-        line_3 = lines[row+1][column+1]+lines[row+2][column+1]
-        line_4 = lines[row+1][column+1]+lines[row+2][column+2]
-        max_ = max(line_1, line_2, line_3, line_4)
-        if line_1 == max_:
-            return max_, (row+2, column)
-        elif line_2 == max_:
-            return max_, (row+2, column+1)
-        elif line_3 == max_:
-            return max_, (row+2, column+1)
-        elif line_4 == max_:
-            return max_, (row+2, column+2)
-        
-    pos = (0, 0)
-    sum_ = lines[0][0]
-    print(sum_, pos)
-    while pos[0] < 14:
-        added, new_pos = reduce(pos)
-        sum_ += added
-        pos = new_pos
-        print(sum_, new_pos, added)
+    curr_line = len(lines)-2
+    while curr_line >= 0:
+        for idx, number in enumerate(lines[curr_line]):
+            lines[curr_line][idx] = number + max(lines[curr_line+1][idx],
+                                                 lines[curr_line+1][idx+1])
+        curr_line -= 1
+    print(lines[0])
     
 problem_18()
