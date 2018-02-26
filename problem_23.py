@@ -41,3 +41,5 @@ def compare():
     
 import cProfile
 cProfile.run("compare()")
+
+# 24618973 function calls in 49.140 seconds
