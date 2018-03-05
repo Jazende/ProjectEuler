@@ -28,9 +28,18 @@ def main():
         return True
 
     def make_combos():
+##        for b in primes1000:
+##            for a in range(-b, 1000):
+##                combos[(a, b)] = 0
+
         for b in primes1000:
-            for a in range(-999, 1000, 1):
+            for a in [x-b-1 for x in primes1000 if -1000 <= (x-b-1) <= 1000]:
                 combos[(a, b)] = 0
+                
+##        #(hoogste prime in 1000) - 999 = 997 - 999
+##        for b in primes1000:
+##            for a in [x for x in range(-999, 1000, 1) if a + b < 1001]:
+##                combos[(a, b)] = 0
 
     def cleanse_by_n(n_value, combinaties):
         results = {}
@@ -45,9 +54,13 @@ def main():
     primes1000 = [x for x in primes if x < 1001]
     print("Making combos")
     make_combos()
-    n = 1
+    n = 2
     while len(combos) > 1:
         combos = cleanse_by_n(n, combos)
         n += 1
+        if len(combos) < 2:
+            for combo in combos.keys():
+                print(combo, end = ' ')
+                print(combo[0] * combo[1])
 
 cProfile.run("main()")
