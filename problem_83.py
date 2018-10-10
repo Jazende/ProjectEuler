@@ -135,9 +135,9 @@ class TopLeftBotRightGraph(Graph):
         return self.shortest_path_sum(top_left, bot_right)[1]
 
 if __name__ == '__main__':
-    with open('p082_matrix.txt', 'r') as f:
-        raw_input = f.read().strip()
-    d = Graph()
-    d.build_from_raw_input(raw_input, go_back=False)
-    print(d.shortest_path_sum('S', 'E'))
-
+    with open('p083_matrix.txt', 'r') as g:
+        raw_input = g.read().strip()
+        
+    e = TopLeftBotRightGraph()
+    e.build_from_raw_input(raw_input)
+    print(e.shortest_path_top_left_bot_right())
