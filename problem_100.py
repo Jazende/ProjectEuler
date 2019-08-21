@@ -1,36 +1,56 @@
-## If a box contains twenty-one coloured discs, composed of fifteen blue discs and six red discs, and two discs were taken at random,  it can be seen that the probability of taking two blue discs,P(BB) = (15/21)×(14/20) = 1/2.
-## The next such arrangement, for which there is exactly 50% chance of taking two blue discs at random, is a box containing eighty-five blue discs and thirty-five red discs.
-## By finding the first arrangement to contain over 10^12 = 1,000,000,000,000 discs in total, determine the number of blue discs that the box would contain.
+import cProfile
 
-## R+B > 10^12 where (B/R+B)*(B-1/(R+B-1)) = 1/2
-## B / (R+B)  *  (B-1)/(R+B-1)  = 1/ 2
-## B * (B-1) / (R+B) * (R+B-1) = 1/2
-## (B² - B) / (R² + R*B - R + R*B + B² - B) = 1/2
-## (B² - B) / (R² + 2*R*B + B² - B - R) = 1/2
-## 2B² - B = R² + 2*R*B + B² - B - R
-## 2B² = R² + 2*R*B + B² - R
-## B² - R² - 2*R*B + R = 0
+def get_next_pair(red, blue):
+    while True:
+        while True:
+            top = 2 * (blue * (blue - 1))
+            bot = ((red + blue) * (red + (blue - 1)))
+            if top < bot:
+                blue += 1
+            elif top == bot:
+                return red, blue
+            else:
+                break
+        red += 1
 
-## Wolframalpha:
-## R = (-)sqrt(2B²+B)-B
+# old_red = 6
+# old_blue = 15
 
-from math import sqrt
-import math
+# new_red = 35
+# new_blue = 85
 
-def chest_check(red, blue):
-    if blue**2 - blue - 2*blue*red - red**2 + red == 0:
-        return True
-    else:
-        return False
+# while True:
+#     part_red = new_red / old_red
+#     part_blue = new_blue / old_blue
 
-def value(red, blue):
-    return (blue**2 - blue - 2*blue*red - red**2 + red)
+#     try_red = int(new_red * part_red)
+#     try_blue = int(new_blue * part_blue)
 
+#     old_red = new_red
+#     old_blue = new_blue
+#     new_red, new_blue = get_next_pair(try_red, try_blue)
+#     if new_red + new_blue >= 1_000_000_000_000:
+#         print(new_blue)
+#         break
 
-def r_value_for_b(blue):
-    rt_one = sqrt(2*blue*blue + blue) - blue
-    return rt_one
+def get_solution(target=1_000_000_000_000):
+    old_red = 6
+    old_blue = 15
 
-for x in range(7**12, 10**12):
-    if chest_check(int(sqrt(2*x**2+x)-x), x):
-        print(int(sqrt(2*x**2+x)-x), x)
+    new_red = 35
+    new_blue = 85
+
+    while True:
+        part_red = new_red / old_red
+        part_blue = new_blue / old_blue
+
+        try_red = int(new_red * part_red)
+        try_blue = int(new_blue * part_blue)
+
+        old_red = new_red
+        old_blue = new_blue
+        new_red, new_blue = get_next_pair(try_red, try_blue)
+        if new_red + new_blue >= target:
+            return new_blue
+
+cProfile.run('get_solution()')
