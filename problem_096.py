@@ -16,7 +16,7 @@ def func_called_timeout(old_func, count=20, time_out=1):
             time.sleep(time_out)
             func_called_timeout_counter = 0
     return print
-print = func_called_timeout(print, time_out=0)
+print = func_called_timeout(print, time_out=5)
 
 re_sudoku = re.compile('Grid (\d{2})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})')
 set_of_nine = set(range(1, 10))
@@ -183,6 +183,8 @@ class SuDoKu(dict):
         return False
 
     def iterative_solve_attempt(self):
+        self.solve()
+
         empty_keys = [key for key, value in self.items() if value == 0]
         
         solutions = {}
@@ -208,18 +210,18 @@ class SuDoKu(dict):
         if edits > 1:
             self.solve()
 
-
-        
+    def get_top_left_three(self):
+        return (self[(0, 0)] * 100) + (self[(1, 0)] * 10) + self[(2, 0)]
 
 def problem_96(raw_input):
     raw_grids = re_sudoku.findall(raw_input)
     grids = [SuDoKu.from_string(gr[0], gr[1:]) for gr in raw_grids]
 
     for grid in grids:
-        grid.solve()
-        if not grid.is_valid():
-            grid.iterative_solve_attempt()
-            if not grid.is_valid():
-                print(grid)
+        grid.iterative_solve_attempt()
+
+    print(sum([g.get_top_left_three() for g in grids]))
+    return sum([g.get_top_left_three() for g in grids])
+
 
 problem_96(raw_input)
