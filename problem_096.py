@@ -32,7 +32,6 @@ class SuDoKu(dict):
         return len(set_of_nine) == len(self.get_row(row_number, type=set))
 
     def _valid_square(self, square_row, square_line):
-        print('Valid square: ', square_row, square_line)
         return set_of_nine == self.get_square(square_row//3, square_line//3, type=set)
         # return len(set_of_nine) == len(self.get_square(square_row//3, square_line//3, type=set))
 
@@ -76,11 +75,13 @@ class SuDoKu(dict):
         return type(line)
 
     def get_square(self, square_row, square_line, type):
-        print('Getting square', square_row, square_line)
-        keys = ((square_row*3+x, square_line*3+x) for x in range(3) for y in range(3))
-        print("keys:", keys)
+        # keys = ((square_row*3+x, square_line*3+x) for x in range(3) for y in range(3))
+        keys = set()
+        for x in range(3):
+            for y in range(3):
+                keys.add(((square_row*3) + x, (square_line*3) + y))
         if type == 'keys':
-            return list(keys)
+            return keys
         line = (self[key] for key in keys)
         if type == str:
             return "".join(str(cell) for cell in line)
@@ -181,13 +182,44 @@ class SuDoKu(dict):
 
         return False
 
+    def iterative_solve_attempt(self):
+        empty_keys = [key for key, value in self.items() if value == 0]
+        
+        solutions = {}
+
+        for key in empty_keys:
+            poss_solutions = self._cell_solutions(key)
+            solutions[key] = []
+
+            for solution in poss_solutions:
+                copied = copy.deepcopy(self)
+                copied[key] = solution
+                copied.solve()
+                if copied.is_valid():
+                    solutions[key].append(solution)
+
+        edits = 0
+        for key, value in solutions.items():
+            if not len(value) == 1:
+                continue
+            self[key] = value[0]
+            edits += 1
+        
+        if edits > 1:
+            self.solve()
+
+
+        
+
 def problem_96(raw_input):
     raw_grids = re_sudoku.findall(raw_input)
     grids = [SuDoKu.from_string(gr[0], gr[1:]) for gr in raw_grids]
 
-    for grid in grids[4:5]:
+    for grid in grids:
         grid.solve()
-        print('Testing:')
-        print(grid.is_valid())
+        if not grid.is_valid():
+            grid.iterative_solve_attempt()
+            if not grid.is_valid():
+                print(grid)
 
 problem_96(raw_input)
