@@ -16,13 +16,25 @@ def func_called_timeout(old_func, count=20, time_out=1):
             time.sleep(time_out)
             func_called_timeout_counter = 0
     return print
-print = func_called_timeout(print, time_out=5)
+# print = func_called_timeout(print, time_out=5)
 
 re_sudoku = re.compile('Grid (\d{2})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})\s+(\d{9})')
 set_of_nine = set(range(1, 10))
 
 with open(r'problem_096_sudoku.txt', 'r') as f:
     raw_input = f.read()
+raw_input = '''
+Grid 01
+800000000
+003600000
+070090200
+050007000
+000045700
+000100030
+001000068
+008500010
+090000400
+'''
 
 class SuDoKu(dict):
     def _valid_line(self, line_number):
@@ -113,6 +125,7 @@ class SuDoKu(dict):
         return possible_answer
 
     def solve(self):
+        print(self)
         if self.is_valid():
             return True
 
